@@ -1,29 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoListApplication.DatabaseContext;
+using TodoListApplication.Services.Interfaces;
 using Task = TodoListApplication.Model.Task;
 
 namespace TodoListApplication.Controllers
 {
-    public class TaskController : Controller
+    public class TaskService : IBaseService<Task>
     {
-        private readonly ApplicationDbContext _context;
-
-        public TaskController(ApplicationDbContext context)
+        public Task GetById(int id)
         {
-            _context = context;
+            return null;
         }
 
-        public IActionResult Index()
+        public void Add(Task task)
         {
-            var users = _context.Tasks.ToList();
-            return View(users);
+            // implementation to add a new task
         }
 
-        public IActionResult AddTask(Task task)
+        public void Update(Task task)
         {
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            // implementation to update a task
+        }
+
+        public void Delete(int id)
+        {
+            // implementation to delete a task by ID
         }
     }
 }

@@ -1,29 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoListApplication.DatabaseContext;
 using TodoListApplication.Model;
+using TodoListApplication.Services.Implementation;
 
 namespace TodoListApplication.Controllers
 {
     public class UserController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UserService _userService;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(UserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
-        public IActionResult Index()
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            var users = _context.Users.ToList();
-            return View(users);
+            var user = _userService.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
         }
 
-        public IActionResult AddUser(User user)
+        [HttpPost]
+        public IActionResult Create([FromBody] User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            _userService.Add(user);
+            return CreatedAtRoute(new { id = user.Id }, user);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] User user)
+        {
+            if (user == null || id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            var existingUser = _userService.GetById(id);
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            _userService.Update(user);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var existingUser = _userService.GetById(id);
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            _userService.Delete(id);
+
+            return NoContent();
         }
     }
 }
