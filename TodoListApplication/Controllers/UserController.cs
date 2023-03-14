@@ -2,16 +2,17 @@
 using TodoListApplication.DatabaseContext;
 using TodoListApplication.Model;
 using TodoListApplication.Services.Implementation;
+using TodoListApplication.Services.Interfaces;
 
 namespace TodoListApplication.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IBaseService<User> _userService;
 
-        public UserController(UserService userService)
+        public UserController(IBaseServiceFactory serviceFactory)
         {
-            _userService = userService;
+            _userService = serviceFactory.Create<User>();
         }
 
         [HttpGet("{id}")]

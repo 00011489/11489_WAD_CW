@@ -6,6 +6,13 @@ namespace TodoListApplication.Services.Implementation
 {
     public class TaskService : IBaseService<Task>
     {
+        public TaskService(ApplicationDbContext context)
+        {
+            Context=context;
+        }
+
+        public ApplicationDbContext Context { get; }
+
         public Task GetById(int id)
         {
             return null;

@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoListApplication.DatabaseContext;
 using TodoListApplication.Services.Implementation;
+using TodoListApplication.Services.Interfaces;
 using Task = TodoListApplication.Model.Task;
 
 namespace TodoListApplication.Controllers
 {
     public class TaskController : Controller
     {
-        private readonly TaskService _taskService;
+        private readonly IBaseService<Task> _taskService;
 
-        public TaskController(TaskService taskService)
+        public TaskController(IBaseServiceFactory serviceFactory)
         {
-            _taskService = taskService;
+            _taskService = serviceFactory.Create<Task>();
         }
 
         [HttpGet("{id}")]
