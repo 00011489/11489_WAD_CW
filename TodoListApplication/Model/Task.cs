@@ -1,6 +1,8 @@
-﻿namespace TodoListApplication.Model
+﻿using Task = TodoListApplication.Model.Task;
+namespace TodoListApplication.Model
+    
 {
-    public class ToDoTask : BaseEntity
+    public class Task : BaseEntity
     {
         public string Title { get; set; }
         public string Description { get; set; }

@@ -1,30 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TodoListApplication.DatabaseContext;
-using TodoListApplication.Services.Interfaces;
+using TodoListApplication.Services.Implementation;
 using Task = TodoListApplication.Model.Task;
 
 namespace TodoListApplication.Controllers
 {
-    public class TaskService : IBaseService<Task>
+    public class TaskController : Controller
     {
-        public Task GetById(int id)
+        private readonly TaskService _taskService;
+
+        public TaskController(TaskService taskService)
         {
-            return null;
+            _taskService = taskService;
         }
 
-        public void Add(Task task)
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            // implementation to add a new task
+            var task = _taskService.GetById(id);
+            if (task == null)
+            {
+                return NotFound();
+            }
+            return Ok(task);
         }
 
-        public void Update(Task task)
+        [HttpPost]
+        public IActionResult Create([FromBody] Task task)
         {
-            // implementation to update a task
+            if (task == null)
+            {
+                return BadRequest();
+            }
+            _taskService.Add(task);
+            return CreatedAtRoute(new { id = task.Id }, task);
         }
 
-        public void Delete(int id)
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Task task)
         {
-            // implementation to delete a task by ID
+            if (task == null || id != task.Id)
+            {
+                return BadRequest();
+            }
+
+            var existingTask = _taskService.GetById(id);
+            if (existingTask == null)
+            {
+                return NotFound();
+            }
+
+            _taskService.Update(task);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var existingTask = _taskService.GetById(id);
+            if (existingTask == null)
+            {
+                return NotFound();
+            }
+
+            _taskService.Delete(id);
+
+            return NoContent();
         }
     }
 }

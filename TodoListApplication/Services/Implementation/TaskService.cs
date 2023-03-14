@@ -4,42 +4,27 @@ using Task = TodoListApplication.Model.Task;
 
 namespace TodoListApplication.Services.Implementation
 {
-    public class TaskService : ITaskService
+    public class TaskService : IBaseService<Task>
     {
-        private readonly ApplicationDbContext _context;
-
-        public TaskService(ApplicationDbContext context)
+        public Task GetById(int id)
         {
-            _context = context;
+            return null;
         }
 
-        public Task CreateTask(Task task)
+        public void Add(Task task)
         {
-            _context.Tasks.Add(task);
-            _context.SaveChanges();
-            return task;
+            // implementation to add a new task
         }
 
-        public Task UpdateTask(Task task)
+        public void Update(Task task)
         {
-            _context.Tasks.Update(task);
-            _context.SaveChanges();
-            return task;
+            // implementation to update a task
         }
 
-        public void DeleteTask(int taskId)
+        public void Delete(int id)
         {
-            var task = _context.Tasks.Find(taskId);
-            if (task != null)
-            {
-                _context.Tasks.Remove(task);
-                _context.SaveChanges();
-            }
-        }
-
-        public Task GetTaskById(int taskId)
-        {
-            return _context.Tasks.Find(taskId);
+            // implementation to delete a task by ID
         }
     }
+
 }
